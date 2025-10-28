@@ -1,0 +1,44 @@
+<!--  This file is app/views/movies/index.html.erb -->
+<h2>All Movies</h2>
+
+<%#  Part 1: Start here... %>
+
+
+<%= form_tag movies_path, method: :get, id: 'ratings_form', local: true do %>
+  <div>
+    <label class="form-label me-2" for="sort_by">Sort by:</label>
+    <%= select_tag :sort_by,
+                   options_for_select([["Title", "title"],
+                                       ["Release date", "release_date"]],
+                                       @sort_by),
+                   id:    "sort_by",
+                   class: "form-select d-inline w-auto" %>
+  </div>
+
+  Include:
+  <% @all_ratings.each do |rating| %>
+    <div class="form-check  form-check-inline">
+      <%= check_box_tag "ratings[#{rating}]", "1", @ratings_to_show.include?(rating), class: 'form-check-input', id: "ratings_#{rating}" %>
+      <%= label_tag "ratings[#{rating}]", rating, class: 'form-check-label' %>
+    </div>
+  <% end %>
+  <%= submit_tag 'Refresh', id: 'ratings_submit', class: 'btn btn-primary' %>
+
+<% end %>
+
+<div id="movies">
+  <% @movies.each do |movie| %>
+    <div class="movie mb-3 p-3 border rounded">
+      <h3>
+        <%= link_to movie.title, movie_path(movie) %>
+      </h3>
+      <p><strong>Rating:</strong> <%= movie.rating %></p>
+      <p><strong>Release Date:</strong> <%= movie.release_date %></p>
+      <p><%= link_to "More about #{movie.title}", movie_path(movie), class: "btn btn-secondary btn-sm" %></p>
+    </div>
+  <% end %>
+</div>
+
+<%= link_to 'Add new movie', new_movie_path, class: 'btn btn-primary mt-3' %>
+
+
